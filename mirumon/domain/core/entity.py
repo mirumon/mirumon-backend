@@ -6,7 +6,7 @@ from typing import Any
 class Entity:  # type: ignore
     """Base class for domain models."""
 
-    id: Any
+    id: Any  # type: ignore
 
     def dict(self) -> dict:  # type: ignore
         return asdict(self)

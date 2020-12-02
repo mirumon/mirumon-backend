@@ -1,7 +1,7 @@
 from typing import Any, Dict, Generic, NewType, Optional, TypeVar, Union
 from uuid import UUID
 
-from pydantic import validator
+from pydantic import validator, parse_obj_as
 
 from mirumon.domain.events import device_detail, device_hardware, device_software
 from mirumon.infra.api.models.base import APIModel
@@ -57,8 +57,8 @@ class EventInResponse(Generic[EventResultT], APIModel):
 
     @classmethod
     @validator("result")
-    def check_event_type_and_payload(
-        cls, value: Optional[dict], values: Dict[str, Any]
+    def check_event_type_and_payload(  # type: ignore
+        cls, value: Optional[Dict[str, Any]], values: Dict[str, Any]
     ) -> Optional[EventResultT]:
         if value is None:
             return value
@@ -73,3 +73,5 @@ class EventInResponse(Generic[EventResultT], APIModel):
         model = mapper.get(values["method"])
         if not model:
             raise ValueError(f"not found model for event of type {value}")
+
+        return parse_obj_as(model, value)
