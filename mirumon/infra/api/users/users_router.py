@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends
 
 from mirumon.domain.users.scopes import UsersScopes
 from mirumon.infra.api.dependencies.users.permissions import check_user_scopes
-from mirumon.infra.api.endpoints.users.http import create, tokens
+from mirumon.infra.api.users.http_endpoints import tokens_controllers, users_controllers
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
-router.include_router(tokens.router)
+router.include_router(tokens_controllers.router)
 router.include_router(
-    create.router, dependencies=[Depends(check_user_scopes([UsersScopes.write]))]
+    users_controllers.router,
+    dependencies=[Depends(check_user_scopes([UsersScopes.write]))],
 )
